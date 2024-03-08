@@ -1,0 +1,29 @@
+/home/ashlok/EECS-545-MLRL/few-shot-preference-rl/setup_shell.sh: line 28: nvidia-smi: command not found
+Traceback (most recent call last):
+  File "scripts/metaworld/collect_policy_dataset.py", line 10, in <module>
+    import metaworld
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/metaworld/__init__.py", line 9, in <module>
+    import metaworld.envs.mujoco.env_dict as _env_dict
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/metaworld/envs/__init__.py", line 1, in <module>
+    from metaworld.envs.mujoco.env_dict import (
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/metaworld/envs/mujoco/env_dict.py", line 6, in <module>
+    from metaworld.envs.mujoco.sawyer_xyz.v2 import (
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/metaworld/envs/mujoco/sawyer_xyz/v2/__init__.py", line 1, in <module>
+    from metaworld.envs.mujoco.sawyer_xyz.v2.sawyer_assembly_peg_v2 import (
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/metaworld/envs/mujoco/sawyer_xyz/v2/sawyer_assembly_peg_v2.py", line 1, in <module>
+    import mujoco
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/mujoco/__init__.py", line 47, in <module>
+    from mujoco.gl_context import *
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/mujoco/gl_context.py", line 38, in <module>
+    from mujoco.osmesa import GLContext as _GLContext
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/mujoco/osmesa/__init__.py", line 31, in <module>
+    from OpenGL import GL
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/GL/__init__.py", line 4, in <module>
+    from OpenGL.GL.VERSION.GL_1_1 import *
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/GL/VERSION/GL_1_1.py", line 14, in <module>
+    from OpenGL.raw.GL.VERSION.GL_1_1 import *
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/raw/GL/VERSION/GL_1_1.py", line 7, in <module>
+    from OpenGL.raw.GL import _errors
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/raw/GL/_errors.py", line 4, in <module>
+    _error_checker = _ErrorChecker( _p, _p.GL.glGetError )
+AttributeError: 'NoneType' object has no attribute 'glGetError'

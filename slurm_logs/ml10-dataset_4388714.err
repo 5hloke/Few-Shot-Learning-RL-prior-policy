@@ -1,0 +1,54 @@
+/home/ashlok/EECS-545-MLRL/few-shot-preference-rl/setup_shell.sh: line 28: nvidia-smi: command not found
+Traceback (most recent call last):
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/osmesa.py", line 22, in GL
+    return ctypesloader.loadLibrary(
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/ctypesloader.py", line 45, in loadLibrary
+    return dllType( name, mode )
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/ctypes/__init__.py", line 373, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: ('OSMesa: cannot open shared object file: No such file or directory', 'OSMesa', None)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "scripts/metaworld/collect_policy_dataset.py", line 10, in <module>
+    import metaworld
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/metaworld/__init__.py", line 9, in <module>
+    import metaworld.envs.mujoco.env_dict as _env_dict
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/metaworld/envs/__init__.py", line 1, in <module>
+    from metaworld.envs.mujoco.env_dict import (
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/metaworld/envs/mujoco/env_dict.py", line 6, in <module>
+    from metaworld.envs.mujoco.sawyer_xyz.v2 import (
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/metaworld/envs/mujoco/sawyer_xyz/v2/__init__.py", line 1, in <module>
+    from metaworld.envs.mujoco.sawyer_xyz.v2.sawyer_assembly_peg_v2 import (
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/metaworld/envs/mujoco/sawyer_xyz/v2/sawyer_assembly_peg_v2.py", line 1, in <module>
+    import mujoco
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/mujoco/__init__.py", line 47, in <module>
+    from mujoco.gl_context import *
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/mujoco/gl_context.py", line 38, in <module>
+    from mujoco.osmesa import GLContext as _GLContext
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/mujoco/osmesa/__init__.py", line 31, in <module>
+    from OpenGL import GL
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/GL/__init__.py", line 3, in <module>
+    from OpenGL import error as _error
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/error.py", line 12, in <module>
+    from OpenGL import platform, _configflags
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/__init__.py", line 35, in <module>
+    _load()
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/__init__.py", line 32, in _load
+    plugin.install(globals())
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/baseplatform.py", line 92, in install
+    namespace[ name ] = getattr(self,name,None)
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/baseplatform.py", line 14, in __get__
+    value = self.fget( obj )
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/osmesa.py", line 66, in GetCurrentContext
+    function = self.OSMesa.OSMesaGetCurrentContext
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/baseplatform.py", line 14, in __get__
+    value = self.fget( obj )
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/osmesa.py", line 60, in OSMesa
+    def OSMesa( self ): return self.GL
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/baseplatform.py", line 14, in __get__
+    value = self.fget( obj )
+  File "/home/ashlok/miniconda3/envs/few-shot-pref-rl/lib/python3.8/site-packages/OpenGL/platform/osmesa.py", line 28, in GL
+    raise ImportError("Unable to load OpenGL library", *err.args)
+ImportError: ('Unable to load OpenGL library', 'OSMesa: cannot open shared object file: No such file or directory', 'OSMesa', None)

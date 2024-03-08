@@ -1,0 +1,8 @@
+SLURM_JOBID = 4388714
+SLURM_JOB_NODELIST = gl3022
+SLURM_JOB_NODELIST = gl3022
+SLURM_NNODES = 1
+SLURMTMPDIR = 
+working directory = /home/ashlok/EECS-545-MLRL/few-shot-preference-rl
+Using mujoco_py
+GPU was not found, assuming CPU setup.
