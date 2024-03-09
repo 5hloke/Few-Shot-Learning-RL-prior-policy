@@ -1,0 +1,3 @@
+[submodule "few-shot-preference-rl"]
+	path = few-shot-preference-rl
+	url = https://github.com/jhejna/few-shot-preference-rl.git
