@@ -93,8 +93,9 @@ class PreferenceMAML:
         #return segments
     
     def form_sigma_groups(self, episode, k):
-        #reverse an episode dataframe and then split into k segments
-        return np.array_split(episode.iloc[::-1], k)
+        #reverse an episode dataframe and then split into segments of length k
+        num_segments = int(episode.shape[0] / k)
+        return np.array_split(episode.iloc[::-1], num_segments)
 
         
 
