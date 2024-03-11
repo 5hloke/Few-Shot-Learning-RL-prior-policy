@@ -23,13 +23,16 @@ def read_file(dir_name):
         main_df = pd.concat([main_df, df])
     return main_df
 
-data = pd.DataFrame()
+data = []
 for name in os.listdir("../datasets/mw"):
+    inner_df = pd.DataFrame()
     if not (name.startswith('.')):
         dir_name = 'mw/'+name
         print(dir_name)
         df = read_file(dir_name)
-        data = pd.concat([data, df])
+        inner_df = pd.concat([inner_df, df])    
+    data.append(inner_df)
+data = np.array(data, dtype=object)
 
 class Model(nn.Module):
     def __init__(self, input_size, hidden_size1, hidden_size2, output_size):
@@ -67,22 +70,28 @@ class PreferenceMAML:
 
         self.model = Model(input_size, hidden_size1, hidden_size2, output_size)
 
-    def construct_episodes(self):
+    def construct_episodes(ml10):
+        # episodes - n (tasks) x num_episode (each npz file)  , each cell is a dataframe of the episode 
         episodes = []
-        episode = []
-        for _, row in self.ml10.iterrows():
-            episode.append(row)
-            if row['done']:
-                episodes.append(episode)
-                episode = []
+        
+        for task in ml10:
+            task_episodes=[]
+            row_index = task[task['done'] == True].index.tolist()
+            prev=0
+            for x in row_index:
+                task_episodes.append(task[prev:x+1])
+                prev=x+1
+            task_episodes = np.array(task_episodes,dtype=object)
+            episodes.append(task_episodes)
+        episodes = np.array(episodes,dtype=object)
         return episodes
 
-    def form_sigma_groups(self, episode, k):
-        sigmas = []
-        segments = []
-        q, r = divmod(len(episode), k)
-        for i in range(k):
-            segments.append(episode[i*q+min(i, r): (i+1)*q+min(i+1, r)])
+    #def form_sigma_groups(self, episode, k):
+     #   sigmas = []
+      #  segments = []
+       # q, r = divmod(len(episode), k)
+        #for i in range(k):
+         #   segments.append(episode[i*q+min(i, r): (i+1)*q+min(i+1, r)])
 
         # for i in range(k):
         #     sigma_i = segments[i]
@@ -90,7 +99,14 @@ class PreferenceMAML:
         #         sigma_j = segments[j]
 
         #         sigmas.append((sigma_i, sigma_j))
-        return segments
+        #return segments
+    
+    def form_sigma_groups(self, episode, k):
+        #reverse an episode dataframe and then split into segments of length k
+        num_segments = int(episode.shape[0] / k)
+        return np.array_split(episode.iloc[::-1], num_segments)
+
+        
 
     def compare_probabilities(self, sigma1, sigma2):
         exp_sum_rewards_sigma1 = np.exp(sum(row['reward'] for row in sigma1))
