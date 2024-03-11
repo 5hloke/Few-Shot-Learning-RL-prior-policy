@@ -84,13 +84,13 @@ class PreferenceMAML:
         for i in range(k):
             segments.append(episode[i*q+min(i, r): (i+1)*q+min(i+1, r)])
 
-        for i in range(k):
-            sigma_i = segments[i]
-            for j in range(i+1, k):
-                sigma_j = segments[j]
+        # for i in range(k):
+        #     sigma_i = segments[i]
+        #     for j in range(i+1, k):
+        #         sigma_j = segments[j]
 
-                sigmas.append((sigma_i, sigma_j))
-        return sigmas
+        #         sigmas.append((sigma_i, sigma_j))
+        return segments
 
     def compare_probabilities(self, sigma1, sigma2):
         exp_sum_rewards_sigma1 = np.exp(sum(row['reward'] for row in sigma1))
@@ -102,31 +102,37 @@ class PreferenceMAML:
         X = []
         y = []
         episodes = self.construct_episodes()
-        for episode in episodes:
-            sigmas = self.form_sigma_groups(episode, k)
-            for _ in range(len(sigmas)):
-                sigma1 = sigmas[_][0]
-                sigma2 = sigmas[_][1]
+        for i in range(len(episodes)):
+            segment1 = self.form_sigma_groups(episodes[i], k)
+            for j in range(i+1, len(episodes)):
+                segment2 = self.form_sigma_groups(episodes[j], k)
+                
 
-                obs_action_sigma1 = []
-                for row in sigma1:
-                    obs_action = list(row['obs']) + list(row['action'])
-                    obs_action_sigma1.append(obs_action)
+        # for episode in episodes:
+        #     sigmas = self.form_sigma_groups(episode, k)
+        #     for _ in range(len(sigmas)):
+        #         sigma1 = sigmas[_][0]
+        #         sigma2 = sigmas[_][1]
 
-                obs_action_sigma2 = []
-                for row in sigma2:
-                    obs_action = list(row['obs']) + list(row['action'])
-                    obs_action_sigma2.append(obs_action)
+        #         obs_action_sigma1 = []
+        #         for row in sigma1:
+        #             obs_action = list(row['obs']) + list(row['action'])
+        #             obs_action_sigma1.append(obs_action)
 
-                if len(obs_action_sigma1) > len(obs_action_sigma2):
-                    obs_action_sigma1 = obs_action_sigma1[1:]
-                elif len(obs_action_sigma1) < len(obs_action_sigma2):
-                    obs_action_sigma2 = obs_action_sigma2[1:]
-                else:
-                    continue
+        #         obs_action_sigma2 = []
+        #         for row in sigma2:
+        #             obs_action = list(row['obs']) + list(row['action'])
+        #             obs_action_sigma2.append(obs_action)
 
-                X.append(np.concatenate((obs_action_sigma1, obs_action_sigma2), axis=1))
-                y.append(self.compare_probabilities(sigma1, sigma2))
+        #         if len(obs_action_sigma1) > len(obs_action_sigma2):
+        #             obs_action_sigma1 = obs_action_sigma1[1:]
+        #         elif len(obs_action_sigma1) < len(obs_action_sigma2):
+        #             obs_action_sigma2 = obs_action_sigma2[1:]
+        #         else:
+        #             continue
+
+        #         X.append(np.concatenate((obs_action_sigma1, obs_action_sigma2), axis=1))
+        #         y.append(self.compare_probabilities(sigma1, sigma2))
 
         return X, y
 
