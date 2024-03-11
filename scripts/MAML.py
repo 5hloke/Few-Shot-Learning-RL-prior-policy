@@ -77,12 +77,12 @@ class PreferenceMAML:
                 episode = []
         return episodes
 
-    def form_sigma_groups(self, episode, k):
-        sigmas = []
-        segments = []
-        q, r = divmod(len(episode), k)
-        for i in range(k):
-            segments.append(episode[i*q+min(i, r): (i+1)*q+min(i+1, r)])
+    #def form_sigma_groups(self, episode, k):
+     #   sigmas = []
+      #  segments = []
+       # q, r = divmod(len(episode), k)
+        #for i in range(k):
+         #   segments.append(episode[i*q+min(i, r): (i+1)*q+min(i+1, r)])
 
         # for i in range(k):
         #     sigma_i = segments[i]
@@ -90,7 +90,13 @@ class PreferenceMAML:
         #         sigma_j = segments[j]
 
         #         sigmas.append((sigma_i, sigma_j))
-        return segments
+        #return segments
+    
+    def form_sigma_groups(self, episode, k):
+        #reverse an episode dataframe and then split into k segments
+        return np.array_split(episode.iloc[::-1], k)
+
+        
 
     def compare_probabilities(self, sigma1, sigma2):
         exp_sum_rewards_sigma1 = np.exp(sum(row['reward'] for row in sigma1))
