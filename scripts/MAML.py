@@ -44,7 +44,7 @@ class Model(nn.Module):
     def forward(self, x):
         x = torch.relu(self.fc1(x))
         x = torch.relu(self.fc2(x))
-        x = torch.sigmoid(self.fc3(x))
+        x = torch.relu(self.fc3(x))
         return x
 
 class PreferenceMAML:
@@ -189,6 +189,20 @@ class PreferenceMAML:
 
         return adapted_model
 
+    '''
+    R_E = 
+    [
+        [
+            sigma_s1^E1, ..., sigma_s#^E1
+        ],
+        [
+            sigma_s1^E2, ..., sigma_s#^E2
+        ], ...,
+        [
+            sigma_s1^EN, ..., sigma_s#^EN
+        ]
+    ]
+    '''
     def _compute_loss(self, model, X, y):
         X_tensor = torch.tensor(X, dtype=torch.float32)
         y_tensor = torch.tensor(y, dtype=torch.float32)
