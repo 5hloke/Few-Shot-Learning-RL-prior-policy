@@ -115,13 +115,15 @@ class iMAML:
     def train(self, X, y, task_lengths, num_epochs):
         plt_x = np.arange(0, num_epochs)
         plt_y = np.zeros(num_epochs)
+        acc = np.zeros(num_epochs)
         for epoch in tqdm(range(num_epochs)):
             self.optim.zero_grad()
-            loss = self._outer_step(self.model, X, y, task_lengths) 
+            loss, accuracy = self._outer_step(self.model, X, y, task_lengths) 
             if loss is None:
                 return {}
             # print('loss from train:', loss)
             plt_y[epoch] = loss
+            acc[epoch] = accuracy
             
             idx = 0
             if epoch % 25 == 0:
@@ -144,13 +146,14 @@ class iMAML:
             outer_x = X_b[H//2:, :]
             outer_y = y_b[H//2:]
             weights = self._inner_loop(inner_x, inner_y, model = model)
-            outer_losses.append(self._compute_loss(outer_x, outer_y, model, parameters=weights))
+            loss, accuracy = self._compute_loss(outer_x, outer_y, model, parameters=weights)
+            outer_losses.append(loss)
         # print(outer_losses)
         if (len(outer_losses) == 0):
             return None
         outer_loss = torch.mean(torch.stack(outer_losses))
         # print("Outer Loss: ", loss)
-        return outer_loss
+        return outer_loss, accuracy
 
 
             
@@ -159,7 +162,7 @@ class iMAML:
         new_dict = {k: torch.clone(v) for k, v in params_og.items()}
 
         for inner_ep in range(5):
-            loss = self._compute_loss(X, y, model, parameters = new_dict)
+            loss, _= self._compute_loss(X, y, model, parameters = new_dict)
             grad = torch.autograd.grad(loss, new_dict.values(), create_graph=True)
 
             idx = 0
@@ -198,4 +201,18 @@ class iMAML:
 
         loss = torch.mean(torch.stack(loss)) #### sum
 
-        return loss
+        # Now accuracy
+        accuracy = 0
+        count = 0
+        with torch.no_grad():
+            for i in range(N):
+                for j in range(i+1, N):
+                    label = torch.tensor(1.0)
+                    if y_tensor[i] > y_tensor[j]:
+                        label = torch.tensor(0.0)
+                    logit = output_reward[j] - output_reward[i]
+                    pred = logit > 0
+                    accuracy += (pred == label).float()
+                    count += 1
+            accuracy = accuracy/count
+        return loss, accuracy
