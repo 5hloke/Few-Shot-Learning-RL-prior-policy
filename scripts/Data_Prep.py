@@ -34,8 +34,20 @@ class DataPreparation:
                 data.append(inner_df)
             data = np.array(data, dtype=object)
         else:
-            for name in os.listdir("../datasets/mw_valid"):
-                inner
+            dir_name = 'mw_valid_policy_v1/'+task+'-v1'
+            print(dir_name)
+            inner_df = pd.DataFrame()
+            df = self.read_file(dir_name)
+            inner_df = pd.concat([inner_df, df])    
+            data.append(inner_df)
+            dir_name = 'mw_valid/'+task+'-v2'
+            print(dir_name)
+            inner_df = pd.DataFrame()
+            df = self.read_file(dir_name)
+            inner_df = pd.concat([inner_df, df])    
+            data.append(inner_df)
+            data = np.array(data, dtype=object)
+
         return data
 
     def construct_episodes(self, ml10):
