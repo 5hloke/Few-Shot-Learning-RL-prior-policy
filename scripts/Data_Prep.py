@@ -21,7 +21,7 @@ class DataPreparation:
             main_df = pd.concat([main_df, df])
         return main_df
 
-    def get_data(self, validation=False, task = None):
+    def get_data(self, validation=False, prior=False, task = None):
         data = []
         if not validation:
             for name in os.listdir("../datasets/mw"):
@@ -34,18 +34,27 @@ class DataPreparation:
                 data.append(inner_df)
             data = np.array(data, dtype=object)
         else:
-            dir_name = 'mw_valid_policy_v1/'+task+'-v1'
-            print(dir_name)
-            inner_df = pd.DataFrame()
-            df = self.read_file(dir_name)
-            inner_df = pd.concat([inner_df, df])    
-            data.append(inner_df)
-            dir_name = 'mw_valid/'+task+'-v2'
-            print(dir_name)
-            inner_df = pd.DataFrame()
-            df = self.read_file(dir_name)
-            inner_df = pd.concat([inner_df, df])    
-            data.append(inner_df)
+            if prior == True:
+                dir_name = 'mw_valid_policy_v1/'+task+'-v1'
+                print(dir_name)
+                inner_df = pd.DataFrame()
+                df = self.read_file(dir_name)
+                inner_df = pd.concat([inner_df, df])    
+                data.append(inner_df)
+                dir_name = 'mw_valid/'+task+'-v2'
+                print(dir_name)
+                inner_df = pd.DataFrame()
+                df = self.read_file(dir_name)
+                inner_df = pd.concat([inner_df, df])    
+                data.append(inner_df)
+            else:
+                dir_name = 'mw_valid/'+task+'-v2'
+                print(dir_name)
+                inner_df = pd.DataFrame()
+                df = self.read_file(dir_name)
+                inner_df = pd.concat([inner_df, df])    
+                data.append(inner_df)
+                
             data = np.array(data, dtype=object)
 
         return data
@@ -127,7 +136,7 @@ class DataPreparation:
         else:    
             task_beg = np.sum(task_lengths[0:task_no])    
             task_end = np.sum(task_lengths[0:task_no+1])
-        rand = random.sample(range(0,400), 110)
+        rand = random.sample(range(0,400), num)
         X_task = X[task_beg:task_end]
         y_task = y[task_beg:task_end]
         X_random = []
@@ -137,4 +146,4 @@ class DataPreparation:
             y_random.append(y_task[r*25 : r*25+25])
         X_random = np.array(X_random, dtype=np.float32)
         y_random = np.array(y_random, dtype=np.float32)
-        return X_random.reshape(2750,43), y_random.reshape(2750,)
+        return X_random.reshape(num*25,43), y_random.reshape(num*25,)
