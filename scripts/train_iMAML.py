@@ -138,6 +138,7 @@ class iMAML:
 
     def _outer_step(self, model, X, y, task_lengths):
         outer_losses = []
+        accuracy = 0
         for t in range(self.num_tasks):
             X_b, y_b = data_prep.batchify(X, y, task_lengths, t)
             H, W = X_b.shape
@@ -146,14 +147,15 @@ class iMAML:
             outer_x = X_b[H//2:, :]
             outer_y = y_b[H//2:]
             weights = self._inner_loop(inner_x, inner_y, model = model)
-            loss, accuracy = self._compute_loss(outer_x, outer_y, model, parameters=weights)
+            loss, acc = self._compute_loss(outer_x, outer_y, model, parameters=weights)
             outer_losses.append(loss)
+            accuracy += acc
         # print(outer_losses)
         if (len(outer_losses) == 0):
             return None
         outer_loss = torch.mean(torch.stack(outer_losses))
         # print("Outer Loss: ", loss)
-        return outer_loss, accuracy
+        return outer_loss, accuracy/self.num_tasks
 
 
             

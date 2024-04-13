@@ -21,17 +21,21 @@ class DataPreparation:
             main_df = pd.concat([main_df, df])
         return main_df
 
-    def get_data(self):
+    def get_data(self, validation=False, task = None):
         data = []
-        for name in os.listdir("../datasets/mw"):
-            inner_df = pd.DataFrame()
-            if not (name.startswith('.')):
-                dir_name = 'mw/'+name
-                print(dir_name)
-                df = self.read_file(dir_name)
-                inner_df = pd.concat([inner_df, df])    
-            data.append(inner_df)
-        data = np.array(data, dtype=object)
+        if not validation:
+            for name in os.listdir("../datasets/mw"):
+                inner_df = pd.DataFrame()
+                if not (name.startswith('.')):
+                    dir_name = 'mw/'+name
+                    print(dir_name)
+                    df = self.read_file(dir_name)
+                    inner_df = pd.concat([inner_df, df])    
+                data.append(inner_df)
+            data = np.array(data, dtype=object)
+        else:
+            for name in os.listdir("../datasets/mw_valid"):
+                inner
         return data
 
     def construct_episodes(self, ml10):
