@@ -9,6 +9,13 @@ class Pebble:
         self.data = data
         self.lr = lr
         self.k = k
+        if model == 'iMAML':
+            pass
+        elif model == 'MAML':
+            pass
+        elif model == 'Reptile':
+            pass 
+        
         self._lrs = torch.nn.ParameterDict({
             k: torch.nn.Parameter(torch.tensor(self.lr), requires_grad = True)
             for k, v in self.gen_model.params.items()
