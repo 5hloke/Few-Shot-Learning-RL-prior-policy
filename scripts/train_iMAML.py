@@ -129,7 +129,10 @@ class iMAML:
             if epoch % 25 == 0:
                 plt.plot(plt_x[:epoch+1], plt_y[:epoch+1])
                 plt.xlabel("Epochs")
-                plt.ylabel("Mean Loss")
+                
+                plt.plot(plt_x[:epoch+1], acc[:epoch+1])
+                plt.xlabel("Epochs")
+                plt.legend(["Loss", "Accuracy"])
                 plt.show() 
                 print(f"Epoch: {epoch}, Loss: {plt_y[epoch]}")
             loss.backward()
