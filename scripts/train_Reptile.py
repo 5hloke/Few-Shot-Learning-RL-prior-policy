@@ -115,12 +115,13 @@ class Reptile:
     def train(self, X, y, task_lengths, num_epochs):
         plt_x = np.arange(0, num_epochs)
         plt_y = np.zeros(num_epochs)
+        acc = np.zeros(num_epochs)
 
         for epoch in tqdm(range(num_epochs)):
 
             self.optim.zero_grad()
 
-            loss, gradient = self._outer_step(self.model, X, y, task_lengths, epoch, num_epochs)  
+            loss, gradient, accuracy = self._outer_step(self.model, X, y, task_lengths, epoch, num_epochs)  
 
             if loss is None:
                 return {}
@@ -133,21 +134,31 @@ class Reptile:
                 idx += 1
 
             plt_y[epoch] = loss
-        
-            if epoch % 25 == 0:
+            acc[epoch] = accuracy
+
+            if epoch % 100 == 0:
                 plt.plot(plt_x[:epoch+1], plt_y[:epoch+1])
                 plt.xlabel("Epochs")
-                plt.ylabel("Mean Loss")
-                plt.show() 
-                print(f"Epoch: {epoch}, Loss: {plt_y[epoch]}")
+                # plt.ylabel("Mean Loss")
                 
-            # loss.backward()
+                # add the accuracy plot
+                plt.plot(plt_x[:epoch+1], acc[:epoch+1])
+                plt.xlabel("Epochs")
+                # plt.ylabel("Mean Accuracy")
+                plt.legend(["Loss", "Accuracy"])
+                
+                plt.show() 
+                print(f"Epoch: {epoch}, Loss: {plt_y[epoch]}, accuracy: {acc[epoch]}")
+                
             self.optim.step()
+
+        return plt_x, plt_y, acc
 
 
     def _outer_step(self, model, X, y, task_lengths, epoch, num_epochs):
         phi = model.params 
         outer_losses = []
+        accuracy = 0
         for t in range(self.num_tasks):
             X_b, y_b = data_prep.batchify(X, y, task_lengths, t)
             H, W = X_b.shape
@@ -157,9 +168,10 @@ class Reptile:
             outer_y = y_b[H//2:]
 
             weights = self._inner_loop(inner_x, inner_y, model = model)
-            
-
-            outer_losses.append(self._compute_loss(outer_x, outer_y, model, parameters=weights))
+            loss, acc= self._compute_loss(outer_x, outer_y, model, parameters=weights)
+            outer_losses.append(loss)
+            accuracy += acc
+            # outer_losses.append(self._compute_loss(outer_x, outer_y, model, parameters=weights))
             
             if t==0:
                 sum_phi_minus_W = {candidate: ((phi[candidate] - weights[candidate])/0.005) for candidate in weights} # 0.005 = inner_lr * inner_epochs
@@ -173,7 +185,7 @@ class Reptile:
         outer_loss = torch.mean(torch.stack(outer_losses))
         # print("Outer Loss: ", outer_loss)
 
-        return outer_loss, sum_phi_minus_W
+        return outer_loss, sum_phi_minus_W, accuracy/self.num_tasks
 
 
             
@@ -183,7 +195,7 @@ class Reptile:
 
         for inner_ep in range(5):
 
-            loss = self._compute_loss(X, y, model, parameters = new_dict)
+            loss, _ = self._compute_loss(X, y, model, parameters = new_dict)
             grad = torch.autograd.grad(loss, new_dict.values(), create_graph=True)
 
             idx = 0
@@ -223,4 +235,18 @@ class Reptile:
 
         loss = torch.mean(torch.stack(loss)) #### sum
 
-        return loss
+        #accuracy 
+        accuracy = 0
+        count = 0
+        with torch.no_grad():
+            for i in range(N):
+                for j in range(i+1, N):
+                    label = torch.tensor(1.0)
+                    if y_tensor[i] > y_tensor[j]:
+                        label = torch.tensor(0.0)
+                    logit = output_reward[j] - output_reward[i]
+                    pred = logit > 0
+                    accuracy += (pred == label).float()
+                    count += 1
+        accuracy = accuracy/count
+        return loss, accuracy
