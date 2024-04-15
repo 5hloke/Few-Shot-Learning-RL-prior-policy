@@ -26,7 +26,7 @@ class Pebble:
             H, W = X_b.shape
             loss, accuracy = self.gen_model._compute_loss(X_b, y_b, self.gen_model.model, self.gen_model.model.params)
             plt_y[epoch] = accuracy
-            if epoch % 25 == 0:
+            if (epoch+1) % 25 == 0:
                 plt.plot(plt_x[:epoch+1], plt_y[:epoch+1])
                 plt.xlabel("Epochs")
                 plt.ylabel("Mean Accuracy")

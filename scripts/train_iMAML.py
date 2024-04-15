@@ -137,6 +137,7 @@ class iMAML:
                 print(f"Epoch: {epoch}, Loss: {plt_y[epoch]}")
             loss.backward()
             self.optim.step()
+        return plt_x, plt_y, acc
 
 
     def _outer_step(self, model, X, y, task_lengths):
