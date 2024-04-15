@@ -34,6 +34,7 @@ class Pebble:
                 print(f"Epoch: {epoch}, Accuracy: {plt_y[epoch]}")
             loss.backward()
             self._optim.step()
+        return plt_x, plt_y
 
 
 
