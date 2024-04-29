@@ -13,7 +13,7 @@ import math
 from torch.nn import functional as F
 warnings.filterwarnings('ignore')
 
-from Data_Prep import DataPreparation as data_prep
+from scripts.Data_Prep_Weighted import DataPreparation as data_prep
 
 class Model(nn.Module):
     def __init__(
